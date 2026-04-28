@@ -288,11 +288,8 @@
 // =============================================
 const OFFICE_NAME = '司法書士藤井真司事務所';
 const OFFICE_TEL  = '092-713-4900';
-const OFFICE_URL  = '#contact'; // ← お問い合わせページのURLに変更してください
+const OFFICE_URL  = '#contact'; // ← お問い合わせページのURLに変更してくださ
 
-// ★ ここにAPIキーを貼り付けてください ★
-const k1 = 'sk-ant-api03-m_yKi15DrbaxdWc0D9N8icpmyISGHg-ZQ8DFl7auGBin5Hvf';
-const API_KEY = k1 + 'Ykg0W1IpR2zEcPd9NPQ_xlRarDGxFfoFDtUmRw-kApiGAAA';
 const SYSTEM_PROMPT = `あなたは「${OFFICE_NAME}」の相続かんたん診断AIです。
 相続について不安を抱えるユーザーに対し、親切・丁寧・わかりやすく対応してください。
 
@@ -569,22 +566,14 @@ async function processUserInput(text) {
   showTyping();
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+const res = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
         system: SYSTEM_PROMPT,
         messages: messages
       })
     });
-
     const data = await res.json();
     const reply = data.content?.[0]?.text || 'エラーが発生しました。';
     removeTyping();
