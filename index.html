@@ -275,7 +275,7 @@
 
 <div class="input-area">
   <div class="input-wrap">
-    <input type="text" id="userInput" placeholder="メッセージを入力…" />
+    <input type="text" id="userInput" placeholder="メッセージを入力（戻りたい時もこちらへ）…" />
   </div>
   <button class="send-btn" id="sendBtn" onclick="sendMessage()">
     <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
@@ -741,7 +741,7 @@ async function initChat() {
   await new Promise(r => setTimeout(r, 700));
   removeTyping();
 
-  const opening = `はじめまして。${OFFICE_NAME}の相続かんたん診断AIです😊\n\nご相続のお手続きについて、いくつかお伺いしながら、必要な手続きをわかりやすくご説明します。最後に診断結果もお伝えします。\n\nまず最初にお聞きします。今回はどのような状況でご相談されていますか？`;
+  const opening = `はじめまして。${OFFICE_NAME}の相続かんたん診断AIです😊\n\nご相続のお手続きについて、いくつかお伺いしながら、必要な手続きをわかりやすくご説明します。最後に診断結果もお伝えします。\n\n💬 入力の途中で間違えたり戻りたい時は、画面下のプロンプトバーにご自身の言葉でご指示ください。AIが丁寧にご案内します。\n\n\nまず最初にお聞きします。今回はどのような状況でご相談されていますか？`;
 
   addMessage('ai', opening);
   messages.push({ role: 'assistant', content: opening });
