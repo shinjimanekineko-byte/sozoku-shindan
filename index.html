@@ -37,7 +37,8 @@
   .header-icon {
     width: 40px; height: 40px; background: var(--gold); border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
+    font-size: 14px; font-weight: 700; color: var(--navy);
+    flex-shrink: 0; letter-spacing: 0.05em;
   }
   .header-text h1 {
     font-family: 'Noto Serif JP', serif; font-size: 14px; font-weight: 700;
@@ -91,8 +92,10 @@
   .msg-avatar {
     width: 34px; height: 34px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 15px; flex-shrink: 0; margin-top: 2px;
+    font-size: 12px; font-weight: 700; color: #fff;
+    flex-shrink: 0; margin-top: 2px; letter-spacing: 0.05em;
   }
+  .msg.user .msg-avatar { font-size: 15px; font-weight: normal; }
   .msg.ai .msg-avatar  { background: var(--navy); }
   .msg.user .msg-avatar{ background: var(--gold); }
   .msg-bubble {
@@ -197,29 +200,41 @@
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 100%; max-width: 720px;
     background: rgba(250,247,242,0.97); backdrop-filter: blur(8px);
-    border-top: 1px solid var(--border); padding: 10px 14px;
+    border-top: 1px solid var(--border); padding: 6px 14px 10px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .input-label {
+    font-size: 11px; color: var(--navy); font-weight: 600;
+    padding-left: 4px; letter-spacing: 0.03em;
+  }
+  .input-row {
     display: flex; align-items: center; gap: 8px;
   }
   .input-wrap {
-    flex: 1; background: #fff; border: 1.5px solid var(--border);
+    flex: 1; background: #fff9ee; border: 2px solid var(--navy);
     border-radius: 24px; display: flex; align-items: center; padding: 0 14px;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(26,39,68,0.08);
   }
-  .input-wrap:focus-within { border-color: var(--navy); }
+  .input-wrap:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(196,147,63,0.15);
+  }
   .input-wrap input {
     flex: 1; border: none; outline: none;
     font-family: 'Noto Sans JP', sans-serif; font-size: 14px;
     padding: 10px 0; background: transparent; color: var(--text);
   }
-  .input-wrap input::placeholder { color: #bbb; }
+  .input-wrap input::placeholder { color: #999; }
   .send-btn {
-    width: 40px; height: 40px; background: var(--navy); border: none;
+    width: 44px; height: 44px; background: var(--gold); border: none;
     border-radius: 50%; cursor: pointer; display: flex; align-items: center;
     justify-content: center; transition: all 0.2s; flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(196,147,63,0.4);
   }
-  .send-btn:hover { background: var(--navy-light); transform: scale(1.05); }
-  .send-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
-  .send-btn svg { width: 17px; height: 17px; fill: #fff; }
+  .send-btn:hover { background: var(--gold-light); transform: scale(1.05); }
+  .send-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+  .send-btn svg { width: 18px; height: 18px; fill: var(--navy); }
 
   /* Typing */
   .typing {
@@ -247,7 +262,7 @@
 <body>
 
 <div class="header">
-  <div class="header-icon">⚖️</div>
+  <div class="header-icon">AI</div>
   <div class="header-text">
     <h1>司法書士藤井真司事務所</h1>
     <p>相続かんたん診断 AI | 無料・匿名</p>
@@ -275,12 +290,15 @@
 </div>
 
 <div class="input-area">
-  <div class="input-wrap">
-    <input type="text" id="userInput" placeholder="メッセージを入力（戻りたい時もこちらへ）…" />
+  <div class="input-label">💬 ご自由にご入力ください</div>
+  <div class="input-row">
+    <div class="input-wrap">
+      <input type="text" id="userInput" placeholder="メッセージを入力（戻りたい時もこちらへ）…" />
+    </div>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
   </div>
-  <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-    <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-  </button>
 </div>
 
 <script>
@@ -458,7 +476,7 @@ function addMessage(role, content, isHTML = false) {
 
   const av = document.createElement('div');
   av.className = 'msg-avatar';
-  av.textContent = role === 'ai' ? '⚖️' : '👤';
+  av.textContent = role === 'ai' ? 'AI' : '👤';
 
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
@@ -476,7 +494,7 @@ function showTyping() {
   const div = document.createElement('div');
   div.className = 'msg ai'; div.id = 'typingIndicator';
   const av = document.createElement('div');
-  av.className = 'msg-avatar'; av.textContent = '⚖️';
+  av.className = 'msg-avatar'; av.textContent = 'AI';
   const t = document.createElement('div');
   t.className = 'typing';
   t.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
