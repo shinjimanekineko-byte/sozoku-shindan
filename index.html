@@ -490,6 +490,34 @@ let assetShown = false;
 // =============================================
 //  UIヘルパー
 // =============================================
+// HTMLエスケープ(XSS防止)
+function escapeHTML(str) {
+  return str.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+}
+
+// マークダウン → HTML 変換
+function markdownToHTML(text) {
+  // まずHTMLエスケープしてから変換
+  let html = escapeHTML(text);
+  // **太字** → <strong>太字</strong>
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // 行頭の ### 見出し3 → <strong>見出し3</strong>
+  html = html.replace(/^###\s+(.+)$/gm, '<strong>$1</strong>');
+  // 行頭の ## 見出し2 → <strong>見出し2</strong>
+  html = html.replace(/^##\s+(.+)$/gm, '<strong>$1</strong>');
+  // 行頭の # 見出し1 → <strong>見出し1</strong>
+  html = html.replace(/^#\s+(.+)$/gm, '<strong>$1</strong>');
+  // --- 区切り線 → 横線
+  html = html.replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid #ddd5c5;margin:8px 0;">');
+  // 改行を <br> に
+  html = html.replace(/\n/g, '<br>');
+  return html;
+}
+
 function addMessage(role, content, isHTML = false) {
   const chatArea = document.getElementById('chatArea');
   const div = document.createElement('div');
@@ -501,7 +529,14 @@ function addMessage(role, content, isHTML = false) {
 
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
-  isHTML ? (bubble.innerHTML = content) : (bubble.textContent = content);
+  if (isHTML) {
+    bubble.innerHTML = content;
+  } else if (role === 'ai') {
+    // AIメッセージはマークダウン変換
+    bubble.innerHTML = markdownToHTML(content);
+  } else {
+    bubble.textContent = content;
+  }
 
   div.appendChild(av);
   div.appendChild(bubble);
@@ -627,6 +662,13 @@ function addAssetPicker() {
   outer.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
+// 1行内マークダウンを適用(改行は処理しない)
+function inlineMarkdown(text) {
+  let html = escapeHTML(text);
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  return html;
+}
+
 // ===== 診断結果カード =====
 function formatResult(text) {
   const body = text.replace('【診断結果】', '').trim();
@@ -639,17 +681,27 @@ function formatResult(text) {
     const t = line.trim();
     if (t.startsWith('■')) {
       if (inSection) html += '</div>';
-      html += `<div class="r-section"><div class="r-section-title">${t.replace(/^■\s*/, '')}</div>`;
+      const title = inlineMarkdown(t.replace(/^■\s*/, ''));
+      html += `<div class="r-section"><div class="r-section-title">${title}</div>`;
       inSection = true;
     } else if (t.startsWith('・') || t.startsWith('•') || t.startsWith('→') || t.startsWith('─')) {
-      const content = t.replace(/^[・•→─]\s*/, '');
+      const rawContent = t.replace(/^[・•→─]\s*/, '');
+      const content = inlineMarkdown(rawContent);
       let badge = '';
-      if (/難易度[：:]\s*高/.test(content) || content.includes('難しい')) badge = '<span class="diff-badge diff-high">難易度：高</span>';
-      else if (/難易度[：:]\s*中/.test(content)) badge = '<span class="diff-badge diff-mid">難易度：中</span>';
-      else if (/難易度[：:]\s*低/.test(content)) badge = '<span class="diff-badge diff-low">難易度：低</span>';
+      if (/難易度[：:]\s*高/.test(rawContent) || rawContent.includes('難しい')) badge = '<span class="diff-badge diff-high">難易度：高</span>';
+      else if (/難易度[：:]\s*中/.test(rawContent)) badge = '<span class="diff-badge diff-mid">難易度：中</span>';
+      else if (/難易度[：:]\s*低/.test(rawContent)) badge = '<span class="diff-badge diff-low">難易度：低</span>';
       html += `<div class="r-item"><div class="r-dot"></div><div>${content}${badge}</div></div>`;
+    } else if (t.match(/^---+$/)) {
+      // 区切り線
+      html += '<hr style="border:none;border-top:1px solid #ddd5c5;margin:8px 0;">';
+    } else if (t.match(/^#+\s+/)) {
+      // 見出しはセクション内なら強調表示として扱う
+      const headingText = inlineMarkdown(t.replace(/^#+\s+/, ''));
+      html += `<div style="padding:3px 0 3px ${inSection ? '12px' : '0'};font-size:13.5px;line-height:1.8;font-weight:700;color:var(--navy);">${headingText}</div>`;
     } else if (t) {
-      html += `<div style="padding:3px 0 3px ${inSection ? '12px' : '0'};font-size:13.5px;line-height:1.8;">${t}</div>`;
+      const content = inlineMarkdown(t);
+      html += `<div style="padding:3px 0 3px ${inSection ? '12px' : '0'};font-size:13.5px;line-height:1.8;">${content}</div>`;
     }
   });
   if (inSection) html += '</div>';
