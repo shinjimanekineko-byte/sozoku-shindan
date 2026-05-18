@@ -328,7 +328,8 @@
 // =============================================
 const OFFICE_NAME = '司法書士藤井真司事務所';
 const OFFICE_TEL  = '092-713-4900';
-const OFFICE_URL  = '#contact'; // ← お問い合わせページのURLに変更してください
+const OFFICE_URL  = 'https://www.o-souzoku.net/'; // ← お問い合わせページのURL
+const OFFICE_HP_URL = 'https://www.o-souzoku.net/'; // 事務所ホームページURL
 
 const SYSTEM_PROMPT = `あなたは「${OFFICE_NAME}」の相続かんたん診断AIです。
 相続について不安を抱えるユーザーに対し、親切・丁寧・わかりやすく対応してください。
@@ -717,8 +718,9 @@ function formatResult(text) {
     <p>診断結果についてご不明な点や、より詳しい手続きについては<strong>無料相談</strong>でお気軽にご相談ください。初回相談料は無料です。</p>
     <div class="cta-btns">
       <a href="tel:${OFFICE_TEL.replace(/-/g,'')}" class="cta-btn">📞 ${OFFICE_TEL}</a>
-      <a href="${OFFICE_URL}" class="cta-btn outline">✉️ ネット予約・お問合せ</a>
+      <a href="${OFFICE_URL}" class="cta-btn outline" target="_blank" rel="noopener">✉️ ネット予約・お問合せ</a>
     </div>
+    <a href="${OFFICE_HP_URL}" class="cta-btn outline" target="_blank" rel="noopener" style="margin-top:8px;display:block;">🏠 事務所ホームページに戻る</a>
     <p class="cta-note">相談料無料・秘密厳守・オンライン対応可</p>
   </div>
   <button class="restart-btn" onclick="restartChat()">🔄 最初からやり直す</button>`;
