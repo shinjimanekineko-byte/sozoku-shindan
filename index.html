@@ -713,6 +713,24 @@ function formatResult(text) {
     <div style="font-size:13px;font-weight:700;color:#c0392b;margin-bottom:4px;">⚠️ ご注意</div>
     <div style="font-size:12.5px;color:var(--text);">この診断結果はAIによる一般的な情報提供です。<br>法律的アドバイスではないため、必ず司法書士・弁護士などの資格者にご確認ください。</div>
   </div>
+  <div style="margin-top:13px;border:2px solid var(--gold);background:#fffaf0;border-radius:10px;padding:14px 16px;line-height:1.8;">
+    <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px;">💰 費用についてのご案内</div>
+    <div style="font-size:12.5px;color:var(--text);">
+      「相続手続きって、いくらかかるんだろう…」<br>
+      そんな不安はありませんか？<br><br>
+      <strong>相続登記の費用は、主に2つで構成されます：</strong><br>
+      ① <strong>登録免許税</strong>（国に納める税金）<br>
+      ② <strong>司法書士の手数料</strong><br><br>
+      当事務所では、戸籍取得をお客様ご自身にしていただくことで、費用を抑えるご提案もしております。<br><br>
+      全国どこの戸籍でも、最寄りの役所でまとめて取得できるようになりました。取り方がわからない場合も、お電話などで丁寧にサポートいたします<strong>（無料）</strong>。
+    </div>
+    <div style="margin-top:12px;padding:10px 12px;background:var(--gold);border-radius:8px;text-align:center;">
+      <div style="font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.05em;">【AI診断ご利用者特典】</div>
+      <div style="font-size:15px;font-weight:700;color:var(--navy);margin-top:3px;">🎁 司法書士の手数料を 2,000円割引</div>
+      <div style="font-size:10.5px;color:var(--navy);margin-top:3px;opacity:0.85;">※戸籍をご自身で取得された方が対象です</div>
+    </div>
+    <div style="font-size:11.5px;color:var(--text-light);margin-top:10px;text-align:center;">詳しいお見積もりは、無料相談にてお気軽にご相談ください。</div>
+  </div>
   <div class="cta-card" style="margin-top:13px;">
     <div class="cta-title">🏛️ ${OFFICE_NAME}</div>
     <p>診断結果についてご不明な点や、より詳しい手続きについては<strong>無料相談</strong>でお気軽にご相談ください。初回相談料は無料です。</p>
@@ -839,7 +857,7 @@ async function initChat() {
   await new Promise(r => setTimeout(r, 700));
   removeTyping();
 
-  const opening = `はじめまして。${OFFICE_NAME}の相続かんたん診断AIです😊\n\nご相続のお手続きについて、いくつかお伺いしながら、必要な手続きをわかりやすくご説明します。最後に診断結果もお伝えします。\n\n💬 入力の途中で間違えたり戻りたい時は、画面下のプロンプトバーにご自身の言葉でご指示ください。AIが丁寧にご案内します。\n\n⚠️ なお、この診断はAIによる一般的な目安です。最終的な判断は必ず司法書士などの資格者にご確認ください。\n\n\nまず最初にお聞きします。今回はどのような状況でご相談されていますか？`;
+  const opening = `はじめまして。${OFFICE_NAME}の相続かんたん診断AIです😊\n\nご相続のお手続きについて、いくつかお伺いしながら、必要な手続きをわかりやすくご説明します。最後に診断結果もお伝えします。\n\n💬 入力の途中で間違えたり戻りたい時は、画面下のプロンプトバーにご自身の言葉でご指示ください。AIが丁寧にご案内します。\n\n⚠️ なお、この診断はAIによる一般的な目安です。最終的な判断は必ず司法書士などの資格者にご確認ください。\n\n💰 費用について：初回相談は無料です。当事務所では、戸籍取得をお客様ご自身に行っていただくことで費用を抑える方法もご案内しております。詳しくは診断結果の最後にご案内します。\n\n\nまず最初にお聞きします。今回はどのような状況でご相談されていますか？`;
 
   addMessage('ai', opening);
   messages.push({ role: 'assistant', content: opening });
